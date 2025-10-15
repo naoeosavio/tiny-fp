@@ -2,9 +2,18 @@
   "name": "lite-fp",
   "version": "0.1.0",
   "description": "Functional programming utilities.",
+  "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/naoeosavio/lite-fp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naoeosavio/lite-fp.git"
+  },
+  "author": "it is not savio",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
