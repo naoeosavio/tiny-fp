@@ -1,0 +1,33 @@
+{
+  "name": "tiny-fp",
+  "version": "0.1.0",
+  "description": "Functional programming utilities.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "tsup": "^8.0.1",
+    "typescript": "^5.4.5"
+  }
+}
