@@ -1,5 +1,5 @@
 {
-  "name": "tiny-fp",
+  "name": "lite-fp",
   "version": "0.1.0",
   "description": "Functional programming utilities.",
   "main": "./dist/index.js",
@@ -23,6 +23,7 @@
     "lint": "tsc",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "ci": "npm run build && npm run lint && npm run format:check",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

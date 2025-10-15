@@ -1,4 +1,4 @@
-# tiny-fp
+# lite-fp
 
 Tiny, zero‑dependency FP helpers for TypeScript.
 
@@ -10,9 +10,9 @@ Tiny, zero‑dependency FP helpers for TypeScript.
 ## Install
 
 ```sh
-npm i tiny-fp
+npm i lite-fp
 # or
-pnpm add tiny-fp
+pnpm add lite-fp
 ```
 
 ## Import
@@ -29,7 +29,7 @@ import {
   none,
   right,
   left,
-} from "tiny-fp";
+} from "lite-fp";
 
 // CJS
 const {
@@ -42,7 +42,7 @@ const {
   none,
   right,
   left,
-} = require("tiny-fp");
+} = require("lite-fp");
 ```
 
 ## Quick Start
@@ -50,7 +50,7 @@ const {
 ### Option
 
 ```ts
-import { Option, some, none } from "tiny-fp";
+import { Option, some, none } from "lite-fp";
 
 const o1 = Option.fromNullable("hello"); // Some("hello")
 const o2 = Option.fromNullable(null); // None
@@ -60,14 +60,14 @@ const upper = Option.map(o1, s => s.toUpperCase()); // Some("HELLO")
 const value = Option.getOrElse(o2, "fallback"); // "fallback"
 
 // Convert
-import { done, fail } from "tiny-fp";
+import { done, fail } from "lite-fp";
 const asResult = Option.toResult(o1, new Error("missing")); // Done("hello")
 ```
 
 ### Either (A | B)
 
 ```ts
-import { Either, left, right } from "tiny-fp";
+import { Either, left, right } from "lite-fp";
 
 type Err = { message: string };
 
@@ -99,7 +99,7 @@ const user = await fetch("/api/user")
 ### Result (Done | Fail)
 
 ```ts
-import { Result } from "tiny-fp";
+import { Result } from "lite-fp";
 
 const r1 = Result.fromNullable("data", "nope"); // Done("data")
 const r2 = await Result.fromPromise(
@@ -113,7 +113,7 @@ const safe = Result.recover(r2, () => "default"); // Done("default")
 ### Pair / Triple
 
 ```ts
-import { Pair, Triple, pair, triple } from "tiny-fp";
+import { Pair, Triple, pair, triple } from "lite-fp";
 
 const p = pair(1, "a"); // Pair<number, string>
 const p2 = Pair.map(
@@ -145,7 +145,6 @@ const t2 = Triple.map(
   - Constructors: `left`, `right`, `new`, `fromNullable`, `fromThrowable`, `fromPromise`
   - Type guards: `isLeft`, `isRight`
   - Ops: `map`, `mapLeft`, `bimap`, `flatMap`, `chain`, `fold`, `match`, `getOrElse`, `zip`, `apply`, `tap`, `tapLeft`
-  - Helpers: `Promise.prototype.toEither(onError)`
 
 - Result
   - Constructors: `done`, `fail`, `new`, `fromNullable`, `fromThrowable`, `fromPromise`
@@ -162,6 +161,7 @@ See `src/` for the full, well‑typed surface.
 
 - Prototype additions
   - `Promise.prototype.toEither(onError)` is provided when `Either` is imported.
+  - `Promise.prototype.toResult(onError)` is provided when `Result` is imported.
   - `Array.prototype.firstOption()` is provided when `Option` is imported.
 - No runtime dependencies. Fully typed. Tree‑shakeable.
 
