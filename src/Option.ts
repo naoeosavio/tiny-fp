@@ -4,84 +4,113 @@ export type None = { readonly $: "None" };
 export type Some<T> = { readonly $: "Some"; readonly value: T };
 export type Option<T> = None | Some<T>;
 
-export const Option = {
-  // Constructors
-  none: <T>(): Option<T> => ({ $: "None" }),
-  some: <T>(value: T): Option<T> => ({ $: "Some", value }),
-  new: <T>(value: T): Option<T> =>
-    value === undefined || value === null
-      ? ({ $: "None" } as None)
-      : ({ $: "Some", value } as Some<T>),
+// Constructors
+export const none = <T>(): Option<T> => ({ $: "None" });
+export const some = <T>(value: T): Option<T> => ({ $: "Some", value });
+export const make = <T>(value: T): Option<T> =>
+  value === undefined || value === null
+    ? ({ $: "None" } as None)
+    : ({ $: "Some", value } as Some<T>);
 
-  // Guards
-  isSome: <T>(option: Option<T>): option is Some<T> => option.$ === "Some",
-  isNone: <T>(option: Option<T>): option is None => option.$ === "None",
+// Guards
+export const isSome = <T>(option: Option<T>): option is Some<T> =>
+  option.$ === "Some";
+export const isNone = <T>(option: Option<T>): option is None =>
+  option.$ === "None";
 
-  // Conversions
-  fromNullable: <T>(value: T | null | undefined): Option<T> =>
-    value == null ? Option.none() : Option.some(value),
-  fromPredicate: <T>(value: T, predicate: (value: T) => boolean): Option<T> =>
-    predicate(value) ? Option.some(value) : Option.none(),
-  fromThrowable: <T>(fn: () => T): Option<T> => {
-    try {
-      return Option.some(fn());
-    } catch {
-      return Option.none();
-    }
-  },
-  fromPromise: async <T>(promise: Promise<T>): Promise<Option<T>> => {
-    try {
-      const value = await promise;
-      return Option.some(value);
-    } catch {
-      return Option.none();
-    }
-  },
-
-  // Ops
-  map: <T, U>(option: Option<T>, fn: (value: T) => U): Option<U> =>
-    option.$ === "Some" ? Option.some(fn(option.value)) : Option.none(),
-  flatMap: <T, U>(option: Option<T>, fn: (value: T) => Option<U>): Option<U> =>
-    option.$ === "Some" ? fn(option.value) : Option.none(),
-  filter: <T>(
-    option: Option<T>,
-    predicate: (value: T) => boolean,
-  ): Option<T> =>
-    option.$ === "Some" && predicate(option.value) ? option : Option.none(),
-  match: <T, U>(
-    option: Option<T>,
-    matcher: { some: (value: T) => U; none: () => U },
-  ): U => (option.$ === "Some" ? matcher.some(option.value) : matcher.none()),
-
-  // Extract
-  getOrElse: <T>(option: Option<T>, defaultValue: T): T =>
-    option.$ === "Some" ? option.value : defaultValue,
-  getOrUndefined: <T>(option: Option<T>): T | undefined =>
-    option.$ === "Some" ? option.value : undefined,
-  getOrThrow: <T>(option: Option<T>, error: Error): T => {
-    if (option.$ === "Some") return option.value;
-    throw error;
-  },
-
-  // Combine
-  zip: <T, U>(a: Option<T>, b: Option<U>): Option<[T, U]> =>
-    a.$ === "Some" && b.$ === "Some"
-      ? Option.some([a.value, b.value])
-      : Option.none(),
-  apply: <T, U>(fn: Option<(value: T) => U>, opt: Option<T>): Option<U> =>
-    fn.$ === "Some" && opt.$ === "Some"
-      ? Option.some(fn.value(opt.value))
-      : Option.none(),
-  orElse: <T>(opt: Option<T>, other: Option<T>): Option<T> =>
-    opt.$ === "Some" ? opt : other,
-
-  // Convert
-  toResult: <T, E>(option: Option<T>, error: E): Result<T, E> =>
-    option.$ === "Some" ? done(option.value) : fail(error),
+// Conversions
+export const fromNullable = <T>(value: T | null | undefined): Option<T> =>
+  value == null ? none() : some(value);
+export const fromPredicate = <T>(
+  value: T,
+  predicate: (value: T) => boolean,
+): Option<T> => (predicate(value) ? some(value) : none());
+export const fromThrowable = <T>(fn: () => T): Option<T> => {
+  try {
+    return some(fn());
+  } catch {
+    return none();
+  }
+};
+export const fromPromise = async <T>(
+  promise: Promise<T>,
+): Promise<Option<T>> => {
+  try {
+    const value = await promise;
+    return some(value);
+  } catch {
+    return none();
+  }
 };
 
-export const none = Option.none;
-export const some = Option.some;
+// Ops
+export const map = <T, U>(option: Option<T>, fn: (value: T) => U): Option<U> =>
+  option.$ === "Some" ? some(fn(option.value)) : none();
+export const flatMap = <T, U>(
+  option: Option<T>,
+  fn: (value: T) => Option<U>,
+): Option<U> => (option.$ === "Some" ? fn(option.value) : none());
+export const filter = <T>(
+  option: Option<T>,
+  predicate: (value: T) => boolean,
+): Option<T> =>
+  option.$ === "Some" && predicate(option.value) ? option : none();
+export const match = <T, U>(
+  option: Option<T>,
+  matcher: { some: (value: T) => U; none: () => U },
+): U => (option.$ === "Some" ? matcher.some(option.value) : matcher.none());
+
+// Extract
+export const getOrElse = <T>(option: Option<T>, defaultValue: T): T =>
+  option.$ === "Some" ? option.value : defaultValue;
+export const getOrUndefined = <T>(option: Option<T>): T | undefined =>
+  option.$ === "Some" ? option.value : undefined;
+export const getOrThrow = <T>(option: Option<T>, error: Error): T => {
+  if (option.$ === "Some") return option.value;
+  throw error;
+};
+
+// Combine
+export const zip = <T, U>(a: Option<T>, b: Option<U>): Option<[T, U]> =>
+  a.$ === "Some" && b.$ === "Some" ? some([a.value, b.value]) : none();
+export const apply = <T, U>(
+  fn: Option<(value: T) => U>,
+  opt: Option<T>,
+): Option<U> =>
+  fn.$ === "Some" && opt.$ === "Some" ? some(fn.value(opt.value)) : none();
+export const orElse = <T>(opt: Option<T>, other: Option<T>): Option<T> =>
+  opt.$ === "Some" ? opt : other;
+
+// Convert
+export const toResult = <T, E>(option: Option<T>, error: E): Result<T, E> =>
+  option.$ === "Some" ? done(option.value) : fail(error);
+
+// Backwards-compatible namespace-style object
+export const Option = {
+  none,
+  some,
+  new: make,
+  isSome,
+  isNone,
+  fromNullable,
+  fromPredicate,
+  fromThrowable,
+  fromPromise,
+  map,
+  flatMap,
+  filter,
+  match,
+  getOrElse,
+  getOrUndefined,
+  getOrThrow,
+  zip,
+  apply,
+  orElse,
+  toResult,
+};
+
+// Convenience namespace alias for consumers
+export const OptionNS = Option;
 
 declare global {
   interface Array<T> {
