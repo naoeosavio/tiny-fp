@@ -96,6 +96,30 @@ export const apply = <T, U, E>(
   return done(fn.value(arg.value));
 };
 
+// Backwards-compatible namespace-style object
+export const Result = {
+  done,
+  fail,
+  new: make,
+  isDone,
+  isFail,
+  fromNullable,
+  fromThrowable,
+  fromPromise,
+  map,
+  mapError,
+  flatMap,
+  match,
+  recover,
+  getOrElse,
+  getOrThrow,
+  zip,
+  apply,
+};
+
+// Convenience namespace alias for consumers
+export const ResultNS = Result;
+
 declare global {
   interface Promise<T> {
     toResult<E = unknown>(onError: (e: unknown) => E): Promise<Result<T, E>>;
