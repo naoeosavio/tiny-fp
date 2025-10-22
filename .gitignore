@@ -139,4 +139,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 tsup.config.ts
 .prettier*
-.npmignore
+.npm*
+.biome*
+biome.*
