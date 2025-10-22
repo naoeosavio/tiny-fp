@@ -137,9 +137,6 @@ export const Either = {
   tapLeft,
 };
 
-// Convenience namespace alias for consumers
-export const EitherNS = Either;
-
 declare global {
   interface Promise<T> {
     toEither<A>(onError: (e: unknown) => A): Promise<Either<A, T>>;

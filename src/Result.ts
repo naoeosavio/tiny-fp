@@ -117,9 +117,6 @@ export const Result = {
   apply,
 };
 
-// Convenience namespace alias for consumers
-export const ResultNS = Result;
-
 declare global {
   interface Promise<T> {
     toResult<E = unknown>(onError: (e: unknown) => E): Promise<Result<T, E>>;

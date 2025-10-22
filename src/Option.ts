@@ -109,9 +109,6 @@ export const Option = {
   toResult,
 };
 
-// Convenience namespace alias for consumers
-export const OptionNS = Option;
-
 declare global {
   interface Array<T> {
     firstOption(): Option<T>;

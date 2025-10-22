@@ -96,6 +96,3 @@ export const Pair = {
 };
 
 export const pair = make;
-
-// Convenience namespace alias for consumers
-export const PairNS = Pair;
