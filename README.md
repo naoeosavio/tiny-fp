@@ -3,7 +3,7 @@
 Tiny, zero‑dependency FP helpers for TypeScript.
 
 - Algebraic data types: `Option`, `Either`, `Result`
-- Product types: `Pair`, `Triple`
+- Product types: `Pair`
 - Small, predictable API with discriminated unions
 - ESM and CJS builds, first‑class TypeScript types
 
@@ -152,8 +152,8 @@ const t2 = Triple.map(
   - Ops: `map`, `mapError`, `flatMap`, `match`, `recover`, `getOrElse`, `getOrThrow`, `zip`, `apply`
   - Convert: `toOption`
 
-- Pair / Triple
-  - `pair`, `triple`, and utilities to map, zip, convert to/from arrays/objects.
+- Pair 
+  - `pair`, and utilities to map, zip, convert to/from arrays/objects.
 
 See `src/` for the full, well‑typed surface.
 
