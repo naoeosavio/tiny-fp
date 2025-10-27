@@ -98,6 +98,36 @@ export const apply = <T, U, E>(
   return done(fn.value(arg.value));
 };
 
+export const orElse = <T, E>(a: Result<T, E>, b: Result<T, E>): Result<T, E> =>
+  a.$ === "Done" ? a : b;
+
+export const filter = <T, E>(
+  result: Result<T, E>,
+  predicate: (value: T) => boolean,
+  onFalse: E,
+): Result<T, E> =>
+  result.$ === "Done"
+    ? predicate(result.value)
+      ? result
+      : fail(onFalse)
+    : result;
+
+export const tap = <T, E>(
+  result: Result<T, E>,
+  f: (value: T) => void,
+): Result<T, E> => {
+  if (result.$ === "Done") f(result.value);
+  return result;
+};
+
+export const tapError = <T, E>(
+  result: Result<T, E>,
+  f: (error: E) => void,
+): Result<T, E> => {
+  if (result.$ === "Fail") f(result.error);
+  return result;
+};
+
 // Backwards-compatible namespace-style object
 export const Result = {
   done,
@@ -119,6 +149,10 @@ export const Result = {
   getOrThrow,
   zip,
   apply,
+  orElse,
+  filter,
+  tap,
+  tapError,
 };
 
 declare global {
