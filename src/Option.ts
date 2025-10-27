@@ -8,9 +8,7 @@ export type Option<T> = None | Some<T>;
 export const none = <T>(): Option<T> => ({ $: "None" });
 export const some = <T>(value: T): Option<T> => ({ $: "Some", value });
 export const make = <T>(value: T): Option<T> =>
-  value === undefined || value === null
-    ? ({ $: "None" } as None)
-    : ({ $: "Some", value } as Some<T>);
+  value == null ? { $: "None" } : { $: "Some", value };
 
 // Guards
 export const isSome = <T>(option: Option<T>): option is Some<T> =>
@@ -32,16 +30,8 @@ export const fromThrowable = <T>(fn: () => T): Option<T> => {
     return none();
   }
 };
-export const fromPromise = async <T>(
-  promise: Promise<T>,
-): Promise<Option<T>> => {
-  try {
-    const value = await promise;
-    return some(value);
-  } catch {
-    return none();
-  }
-};
+export const fromPromise = <T>(promise: Promise<T>): Promise<Option<T>> =>
+  promise.then(some, () => none());
 
 // Ops
 export const map = <T, U>(option: Option<T>, fn: (value: T) => U): Option<U> =>
@@ -113,8 +103,17 @@ declare global {
   interface Array<T> {
     firstOption(): Option<T>;
   }
+  interface Promise<T> {
+    toOption(): Promise<Option<T>>;
+  }
 }
 
 Array.prototype.firstOption = function <T>(this: T[]): Option<T> {
   return this[0] ? some(this[0]) : none();
+};
+
+Promise.prototype.toOption = function <T>(
+  this: Promise<T>,
+): Promise<Option<T>> {
+  return fromPromise(this);
 };
