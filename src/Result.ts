@@ -1,5 +1,3 @@
-import type { Pair } from "./Pair";
-
 export type Done<T> = { readonly $: "Done"; readonly value: T };
 export type Fail<E> = { readonly $: "Fail"; readonly error: E };
 export type Result<T, E> = Done<T> | Fail<E>;
@@ -7,9 +5,7 @@ export type Result<T, E> = Done<T> | Fail<E>;
 export const done = <T>(value: T): Done<T> => ({ $: "Done", value });
 export const fail = <E>(error: E): Fail<E> => ({ $: "Fail", error });
 export const make = <T, E = unknown>(value: T, error: E): Result<T, E> =>
-  value === undefined || value === null
-    ? { $: "Fail", error }
-    : { $: "Done", value };
+  value == null ? { $: "Fail", error } : { $: "Done", value };
 
 export const isDone = <T, E>(result: Result<T, E>): result is Done<T> =>
   result.$ === "Done";
@@ -32,17 +28,10 @@ export const fromThrowable = <T, E = unknown>(
   }
 };
 
-export const fromPromise = async <T, E = unknown>(
+export const fromPromise = <T, E = unknown>(
   promise: Promise<T>,
   onError: (e: unknown) => E,
-): Promise<Result<T, E>> => {
-  try {
-    const value = await promise;
-    return done(value);
-  } catch (e) {
-    return fail(onError(e));
-  }
-};
+): Promise<Result<T, E>> => promise.then(done, (e) => fail(onError(e)));
 
 export const map = <T, U, E>(
   result: Result<T, E>,
@@ -81,7 +70,7 @@ export const getOrThrow = <T, E>(
 export const zip = <A, B, E>(
   a: Result<A, E>,
   b: Result<B, E>,
-): Result<Pair<A, B>, E> => {
+): Result<[A, B], E> => {
   if (a.$ === "Fail") return a;
   if (b.$ === "Fail") return b;
   return done([a.value, b.value]);
