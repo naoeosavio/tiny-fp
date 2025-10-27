@@ -1,5 +1,3 @@
-import { type Pair, pair } from "./Pair";
-
 export type Left<A> = { readonly $: "Left"; readonly value: A };
 export type Right<B> = { readonly $: "Right"; readonly value: B };
 export type Either<A, B> = Left<A> | Right<B>;
@@ -77,10 +75,10 @@ export const getOrElse = <A, B>(e: Either<A, B>, defaultValue: B): B =>
 export const zip = <E, A, B>(
   a: Either<E, A>,
   b: Either<E, B>,
-): Either<E, Pair<A, B>> => {
+): Either<E, [A, B]> => {
   if (a.$ === "Left") return a;
   if (b.$ === "Left") return b;
-  return right(pair(a.value, b.value));
+  return right<[A, B]>([a.value, b.value]);
 };
 export const apply = <E, A, B>(
   fn: Either<E, (value: A) => B>,
