@@ -5,7 +5,13 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bugs": {
     "url": "https://github.com/naoeosavio/lite-fp/issues"
   },
@@ -14,17 +20,8 @@
     "url": "https://github.com/naoeosavio/lite-fp.git"
   },
   "author": "it is not savio",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "sideEffects": false,
-  "files": [
-    "dist"
+  "keywords": [
+    
   ],
   "scripts": {
     "build": "tsup",
@@ -33,11 +30,11 @@
     "format": "biome check --write src",
     "check": "biome check src",
     "ci": "npm run lint && npm run check && npm run build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run ci"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
-    "tsup": "^8.0.1",
+    "tsup": "8.0.1",
     "typescript": "^5.4.5"
   }
 }
