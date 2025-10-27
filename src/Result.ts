@@ -43,6 +43,13 @@ export const mapError = <T, E, F>(
   fn: (error: E) => F,
 ): Result<T, F> => (result.$ === "Fail" ? fail(fn(result.error)) : result);
 
+export const bimap = <T, E, U, F>(
+  result: Result<T, E>,
+  onDone: (value: T) => U,
+  onFail: (error: E) => F,
+): Result<U, F> =>
+  result.$ === "Done" ? done(onDone(result.value)) : fail(onFail(result.error));
+
 export const flatMap = <T, U, E>(
   result: Result<T, E>,
   fn: (value: T) => Result<U, E>,
@@ -53,6 +60,12 @@ export const match = <T, E, U>(
   matcher: { done: (value: T) => U; fail: (error: E) => U },
 ): U =>
   result.$ === "Done" ? matcher.done(result.value) : matcher.fail(result.error);
+
+export const fold = <T, E, U>(
+  result: Result<T, E>,
+  onFail: (error: E) => U,
+  onDone: (value: T) => U,
+): U => (result.$ === "Done" ? onDone(result.value) : onFail(result.error));
 
 export const recover = <T, E>(
   result: Result<T, E>,
@@ -97,8 +110,10 @@ export const Result = {
   fromPromise,
   map,
   mapError,
+  bimap,
   flatMap,
   match,
+  fold,
   recover,
   getOrElse,
   getOrThrow,
