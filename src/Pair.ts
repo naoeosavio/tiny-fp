@@ -1,6 +1,3 @@
-import { none, type Option, some } from "./Option";
-import { done, fail, type Result } from "./Result";
-
 export type Pair<A, B> = readonly [A, B];
 
 // Standalone fns
@@ -55,17 +52,6 @@ export const equals = <A, B>(
   eqB: (b1: B, b2: B) => boolean,
 ): boolean => eqA(p1[0], p2[0]) && eqB(p1[1], p2[1]);
 
-export const traverseOption = <A, B, C>(
-  p: Pair<A, Option<B>>,
-  fn: (a: A, b: B) => C,
-): Option<Pair<A, C>> =>
-  p[1].$ === "Some" ? some(make(p[0], fn(p[0], p[1].value))) : none();
-export const traverseResult = <A, B, C, E>(
-  p: Pair<A, Result<B, E>>,
-  fn: (a: A, b: B) => C,
-): Result<Pair<A, C>, E> =>
-  p[1].$ === "Done" ? done(make(p[0], fn(p[0], p[1].value))) : fail(p[1].error);
-
 export const zip = <A, B, C, D>(
   p1: Pair<A, B>,
   p2: Pair<C, D>,
@@ -90,8 +76,6 @@ export const Pair = {
   toObject,
   eq,
   equals,
-  traverseOption,
-  traverseResult,
   zip,
 };
 
